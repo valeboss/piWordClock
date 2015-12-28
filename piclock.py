@@ -116,8 +116,15 @@ class LuminosityControlThread(threading.Thread):
 
 def main():
     while True:
-        print("Mainloop running...")
-        time.sleep(60)
+        try:
+            print("Mainloop running...")
+            time.sleep(60)
+        except KeyboardInterrupt:
+            print("KeyboardInterrupt")
+            #clock_thread.stop()
+            #tornado_thread.stop()
+            #database_thread.
+            #luminosity_control_thread.stop()
 
 
 define("port", default=8889, help="run on the given port", type = int)

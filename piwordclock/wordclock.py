@@ -39,7 +39,7 @@ class WordClock(object):
         except NameError:
             pass
         # Initializes the Adafruit_NeoPixel library.
-        self.strip = Adafruit_NeoPixel(count_x * count_y, 18, 800000, 5, False)
+        self.strip = Adafruit_NeoPixel((count_x * count_y) + 3, 18, 800000, 5, False)
         self.strip.begin()
         # Initilaizes the matrix for the WordClock
         self.matrix = Matrix(count_x * count_y, self.strip)
