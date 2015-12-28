@@ -2,6 +2,7 @@
 __author__ = 'Valentin'
 import glob
 import time
+import math
 try:
     import RPi.GPIO as GPIO
 except ImportError:
@@ -42,7 +43,7 @@ class WordClock(object):
         self.strip = Adafruit_NeoPixel((count_x * count_y) + 3, 18, 800000, 5, False)
         self.strip.begin()
         # Initilaizes the matrix for the WordClock
-        self.matrix = Matrix(count_x * count_y, self.strip)
+        self.matrix = Matrix((count_x * count_y) + 3, self.strip)
 
     ## Diese Funktion startet die WordClock.
     #
@@ -73,7 +74,14 @@ class WordClock(object):
         minutes = datetime[4]
         seconds = datetime[5]
 
-        minute_step = int((minutes+int(seconds/60))+2.5-((minutes+int(seconds/60))+2.5) % 5)
+        #minute_step = int((minutes+int(seconds/60))+2.5-((minutes+int(seconds/60))+2.5) % 5)
+        if minutes % 10 >= 5:
+            minute_step = minutes - (minutes % 10) + 5
+        else:
+            minute_step = minutes - (minutes % 10)
+
+        minutes_binary = int(math.fabs(minutes - minute_step))
+
         hour_step = hours
         if minute_step >= 25:
             hour_step += 1
@@ -86,6 +94,20 @@ class WordClock(object):
 
         # Displays "ES IST"
         visible_pixels = [18, 19, 22, 23, 24]
+
+        # Displays "UHR"
+        if minute_step == 0:
+            visible_pixels.extend([204, 205, 206])
+
+        # Binär kodierte Minutenanzeige auf den drei letzten LEDs, invertierte LEDs, da gerade Reihe
+        if minutes_binary == 1:
+            visible_pixels.extend([227])
+        elif minutes_binary == 2:
+            visible_pixels.extend([226])
+        elif minutes_binary == 3:
+            visible_pixels.extend([226, 227])
+        elif minutes_binary == 4:
+            visible_pixels.extend([225])
 
         if minute_step == 5 or minute_step == 25 or minute_step == 35 or minute_step == 55:
             visible_pixels.extend([53, 54, 55, 56])

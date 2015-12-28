@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Valentin'
 from .pixel import Pixel
+import math
 
 ## Die Klasse Matrix beschreibt die Matrix von Pixeln die auf der WordClock angezeigt werden.
 #
@@ -21,7 +22,7 @@ class Matrix(object):
         self.strip = strip
         self.pixels = []
         self.colonVisible = False
-        self.pixel_colour_on = [0, 0, 25]
+        self.pixel_colour_on = [0, 0, 150]
         self.pixel_colour_off = [0, 0, 0]
         while i <= pixel-1:
             self.pixels.append(Pixel(False, i % 15, int(i/15), "yellow", "white"))
@@ -60,7 +61,7 @@ class Matrix(object):
     # Farbe der einzelnen Pixel wird hier noch nicht berücksichtigt sondern nur eine Allgemeine global gesetzte. Dies
     # muss noch implementiert werden.
     def draw_pixels(self):
-        for i in range(0, len(self.pixels)):
+        for i in range(0, len(self.pixels) - 3):
             row = int((i - i % 15)/15)
             if row % 2 == 0:
                 i_neu = i
@@ -72,6 +73,15 @@ class Matrix(object):
             else:
                 self.strip.setPixelColorRGB(i_neu, int(self.pixel_colour_off[0]), int(self.pixel_colour_off[1]),
                                             int(self.pixel_colour_off[2]))
+
+        for i in range(len(self.pixels) - 3, len(self.pixels)):
+            if self.pixels[i].state:
+                self.strip.setPixelColorRGB(i, int(self.pixel_colour_on[0]), int(self.pixel_colour_on[1]),
+                                            int(self.pixel_colour_on[2]))
+            else:
+                self.strip.setPixelColorRGB(i, int(self.pixel_colour_off[0]), int(self.pixel_colour_off[1]),
+                                            int(self.pixel_colour_off[2]))
+
         self.strip.show()
 
     ## Diese Funktion aktualisiert die Anzeige der Uhr. Es werden dabei die einzelnen Farbwerte der Pixel abgerufen.
