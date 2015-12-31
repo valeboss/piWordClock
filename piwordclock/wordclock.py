@@ -130,7 +130,10 @@ class WordClock(object):
             visible_pixels.extend([69, 70, 71, 72])
 
         if hour_step == 1:
-            visible_pixels.extend([153, 154, 155, 156])
+            if minute_step != 0:
+                visible_pixels.extend([153, 154, 155, 156])
+            else:
+                visible_pixels.extend([153, 154, 155])
         elif hour_step == 2:
             visible_pixels.extend([181, 182, 183, 184])
         elif hour_step == 3:
@@ -154,6 +157,7 @@ class WordClock(object):
         elif hour_step == 12 or hour_step == 0:
             visible_pixels.extend([198, 199, 200, 201, 202])
         else:
+            print("Dies hätte nicht passieren dürfen; Fehler in Funktion: display_time_in_words")
             return
 
         for i in visible_pixels:
