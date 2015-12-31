@@ -100,7 +100,7 @@ class WordClock(object):
             visible_pixels.extend([204, 205, 206])
 
         # Binär kodierte Minutenanzeige auf den drei letzten LEDs; invertierte LEDs, da gerade Reihe
-        binary_pixels = [[227], [226], [226, 227], [225]]
+        binary_pixels = [[], [227], [226], [226, 227], [225]]
         visible_pixels.extend(binary_pixels[minutes_binary])
 
         #if minutes_binary == 1:
