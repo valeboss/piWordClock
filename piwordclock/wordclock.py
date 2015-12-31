@@ -99,15 +99,18 @@ class WordClock(object):
         if minute_step == 0:
             visible_pixels.extend([204, 205, 206])
 
-        # Binär kodierte Minutenanzeige auf den drei letzten LEDs, invertierte LEDs, da gerade Reihe
-        if minutes_binary == 1:
-            visible_pixels.extend([227])
-        elif minutes_binary == 2:
-            visible_pixels.extend([226])
-        elif minutes_binary == 3:
-            visible_pixels.extend([226, 227])
-        elif minutes_binary == 4:
-            visible_pixels.extend([225])
+        # Binär kodierte Minutenanzeige auf den drei letzten LEDs; invertierte LEDs, da gerade Reihe
+        binary_pixels = [[227], [226], [226, 227], [225]]
+        visible_pixels.extend(binary_pixels[minutes_binary])
+
+        #if minutes_binary == 1:
+        #    visible_pixels.extend([227])
+        #elif minutes_binary == 2:
+        #    visible_pixels.extend([226])
+        #elif minutes_binary == 3:
+        #    visible_pixels.extend([226, 227])
+        #elif minutes_binary == 4:
+        #    visible_pixels.extend([225])
 
         if minute_step == 5 or minute_step == 25 or minute_step == 35 or minute_step == 55:
             visible_pixels.extend([53, 54, 55, 56])
