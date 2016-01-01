@@ -148,6 +148,7 @@ class WordClock(object):
                 visible_pixels.extend([153, 154, 155, 156])
             else:
                 visible_pixels.extend([153, 154, 155])
+        #TODO Code Performance: Diese Wörter kann man auch über eine Liste laden, mit vordfinierten Wörtern in definitions.py
         elif hour_step == 2:
             visible_pixels.extend([181, 182, 183, 184])
         elif hour_step == 3:
@@ -312,6 +313,8 @@ class WordClock(object):
     # folgendermaßen kodiert sein: {"r": 0-255, "g": 0-255, "b": 0-255}.
     def display_custom_pixel_list(self, matrix, pixel_list):
         i = 0
+        # Zur Sicherheit um das Netzteil nicht zu überlasten
+        #TODO bessere Möglichkeit finden als einfach mit 0.1 zu multiplizieren
         dim_led = 0.1
         while i < len(pixel_list):
             matrix.set_pixel_colour_rgb(i, pixel_list[i]["r"] * dim_led, pixel_list[i]["g"] * dim_led,
