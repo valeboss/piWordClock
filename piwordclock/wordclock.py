@@ -61,7 +61,7 @@ class WordClock(object):
         elif mode == "render_pixel_list":
             function_to_call(self.matrix, optional_argument)
         else:
-            print("No match. Use words, digital, temp or pixel_list. See documentation for reference.")
+            print("No match. Use words, digital, temp or pixel_list. View documentation for reference.")
             pass
 
     ## Diese Funktion stellt die aktuelle Zeit in Worten dar.
@@ -103,15 +103,6 @@ class WordClock(object):
         binary_pixels = [[], [227], [226], [226, 227], [225]]
         visible_pixels.extend(binary_pixels[minutes_binary])
 
-        #if minutes_binary == 1:
-        #    visible_pixels.extend([227])
-        #elif minutes_binary == 2:
-        #    visible_pixels.extend([226])
-        #elif minutes_binary == 3:
-        #    visible_pixels.extend([226, 227])
-        #elif minutes_binary == 4:
-        #    visible_pixels.extend([225])
-
         if minute_step == 5 or minute_step == 25 or minute_step == 35 or minute_step == 55:
             visible_pixels.extend([53, 54, 55, 56])
         if minute_step == 25 or minute_step == 40 or minute_step == 45 or minute_step == 50 or minute_step == 55:
@@ -134,6 +125,7 @@ class WordClock(object):
                 visible_pixels.extend([153, 154, 155, 156])
             else:
                 visible_pixels.extend([153, 154, 155])
+        #TODO Code Performance: Diese Wörter kann man auch über eine Liste laden, mit vordfinierten Wörtern in definitions.py
         elif hour_step == 2:
             visible_pixels.extend([181, 182, 183, 184])
         elif hour_step == 3:
@@ -298,6 +290,8 @@ class WordClock(object):
     # folgendermaßen kodiert sein: {"r": 0-255, "g": 0-255, "b": 0-255}.
     def display_custom_pixel_list(self, matrix, pixel_list):
         i = 0
+        # Zur Sicherheit um das Netzteil nicht zu überlasten
+        #TODO bessere Möglichkeit finden als einfach mit 0.1 zu multiplizieren
         dim_led = 0.1
         while i < len(pixel_list):
             matrix.set_pixel_colour_rgb(i, pixel_list[i]["r"] * dim_led, pixel_list[i]["g"] * dim_led,
