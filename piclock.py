@@ -145,6 +145,7 @@ class WebsocketHandler(tornado.websocket.WebSocketHandler):
         self.message_handler(message)
 
     def message_handler(self, message):
+        #TODO Funktion muss aufgeräumt werden
         global pixel_list
         global colour_lock
         pixel_list = None
@@ -212,10 +213,10 @@ class Application(tornado.web.Application):
 if __name__ == "__main__":
     clock_thread = ClockThread(0, "WordClock")
     tornado_thread = TornadoThread(1, "Tornado Websocket Server")
-    database_thread = DatabaseThread(2, "sqlite3 Database")
+    #database_thread = DatabaseThread(2, "sqlite3 Database")
     luminosity_control_thread = LuminosityControlThread(3, "Luminosity Control")
     clock_thread.start()
     tornado_thread.start()
-    database_thread.start()
+    #database_thread.start()
     luminosity_control_thread.start()
     main()
