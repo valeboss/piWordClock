@@ -164,6 +164,7 @@ class WebsocketHandler(tornado.websocket.WebSocketHandler):
         self.message_handler(message)
 
     def message_handler(self, message):
+        #TODO Funktion muss aufgeräumt werden
         global pixel_list
         global color_lock
         pixel_list = None
