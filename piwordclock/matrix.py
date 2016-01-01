@@ -57,22 +57,57 @@ class Matrix(object):
     # pixel_colour_off abgerufen.
     #
     # Anhand der Anzahl der Pixel errechnet die Funktion die korrekte Reihenfolge der Pixel. Diese
-    # ist aber abhängig von der internen Verdahtung der Pixel und muss gegebenenfalls korrigiert werden. Die eigentliche
-    # Farbe der einzelnen Pixel wird hier noch nicht berücksichtigt sondern nur eine Allgemeine global gesetzte. Dies
-    # muss noch implementiert werden.
+    # ist aber abhängig von der internen Verdahtung der Pixel und muss gegebenenfalls korrigiert werden.
+    # @param self Object pointer
     def draw_pixels(self):
+        # Den drei unteren Pixel könnte man auch ihre Nummern entsprechend der Matrix geben
+        # (Reihe 15 invertiert 239, 240, 241), dann kann man sich die Unterscheidung sparen
         for i in range(0, len(self.pixels) - 3):
             row = int((i - i % 15)/15)
             if row % 2 == 0:
-                i_neu = i
+                i_new = i
             else:
-                i_neu = row * 30 + 14 - i
+                i_new = row * 30 + 14 - i
             if self.pixels[i].state:
-                self.strip.setPixelColorRGB(i_neu, int(self.pixel_colour_on[0]), int(self.pixel_colour_on[1]),
-                                            int(self.pixel_colour_on[2]))
+                self.strip.setPixelColorRGB(i_new, int(round(self.pixel_colour_on[0], 0)),
+                                            int(round(self.pixel_colour_on[1], 0)),
+                                            int(round(self.pixel_colour_on[2], 0)))
             else:
-                self.strip.setPixelColorRGB(i_neu, int(self.pixel_colour_off[0]), int(self.pixel_colour_off[1]),
-                                            int(self.pixel_colour_off[2]))
+                self.strip.setPixelColorRGB(i_new, int(round(self.pixel_colour_off[0], 0)),
+                                            int(round(self.pixel_colour_off[1], 0)),
+                                            int(round(self.pixel_colour_off[2], 0)))
+
+        for i in range(len(self.pixels) - 3, len(self.pixels)):
+            if self.pixels[i].state:
+                self.strip.setPixelColorRGB(i, int(round(self.pixel_colour_on[0], 0)),
+                                            int(round(self.pixel_colour_on[1], 0)),
+                                            int(round(self.pixel_colour_on[2], 0)))
+            else:
+                self.strip.setPixelColorRGB(i, int(round(self.pixel_colour_off[0], 0)),
+                                            int(round(self.pixel_colour_off[1], 0)),
+                                            int(round(self.pixel_colour_off[2], 0)))
+
+        self.strip.show()
+
+    ## Diese Funktion aktualisiert die Anzeige der Uhr. Es werden dabei die einzelnen Farbwerte der Pixel abgerufen.
+    #
+    # Anhand der Anzahl der Pixel errechnet die Funktion die korrekte Reihenfolge der Pixel. Diese
+    # ist aber abhängig von der internen Verdahtung der Pixel und muss gegebenenfalls korrigiert werden.
+    # @param self Object pointer
+    #TODO Redundante Funktion zu draw_pixels(), kann vermutlich 1:1 ersetzt werden
+    def draw_every_single_pixel(self):
+        for i in range(0, (len(self.pixels) - 3)):
+            row = int((i - i % 15)/15)
+            if row % 2 == 0:
+                i_new = i
+            else:
+                i_new = row * 30 + 14 - i
+            if self.pixels[i].state:
+                self.strip.setPixelColorRGB(i_new, int(self.pixels[i].colour_on[0]), int(self.pixels[i].colour_on[1]),
+                                            int(self.pixels[i].colour_on[2]))
+            else:
+                self.strip.setPixelColorRGB(i_new, int(self.pixels[i].colour_off[0]), int(self.pixels[i].colour_off[1]),
+                                            int(self.pixels[i].colour_off[2]))
 
         for i in range(len(self.pixels) - 3, len(self.pixels)):
             if self.pixels[i].state:
@@ -82,26 +117,6 @@ class Matrix(object):
                 self.strip.setPixelColorRGB(i, int(self.pixel_colour_off[0]), int(self.pixel_colour_off[1]),
                                             int(self.pixel_colour_off[2]))
 
-        self.strip.show()
-
-    ## Diese Funktion aktualisiert die Anzeige der Uhr. Es werden dabei die einzelnen Farbwerte der Pixel abgerufen.
-    #
-    # Anhand der Anzahl der Pixel errechnet die Funktion die korrekte Reihenfolge der Pixel. Diese
-    # ist aber abhängig von der internen Verdahtung der Pixel und muss gegebenenfalls korrigiert werden.
-    # @param self Object pointer
-    def draw_every_single_pixel(self):
-        for i in range(0, len(self.pixels)):
-            row = int((i - i % 15)/15)
-            if row % 2 == 0:
-                i_neu = i
-            else:
-                i_neu = row * 30 + 14 - i
-            if self.pixels[i].state:
-                self.strip.setPixelColorRGB(i_neu, int(self.pixels[i].colour_on[0]), int(self.pixels[i].colour_on[1]),
-                                            int(self.pixels[i].colour_on[2]))
-            else:
-                self.strip.setPixelColorRGB(i_neu, int(self.pixels[i].colour_off[0]), int(self.pixels[i].colour_off[1]),
-                                            int(self.pixels[i].colour_off[2]))
         self.strip.show()
 
     ## Diese Funktion versetzt alle Pixel in den ausgeschalteten Zustand, ohne die Anzeige zu aktualisieren.
