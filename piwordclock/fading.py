@@ -14,39 +14,59 @@ import math
 # @param rgb_new Neuer Farbwert als Liste mit 3 Werten in der Reihenfolge rot, grün, blau.
 # @param rgb_current Aktueller Farbwert als Liste mit 3 Werten in der Reihenfolge rot, grün, blau.
 # @param time Zeitintervall in der die Änderung abgeschlossen sein soll in Sekunden.
-def fade_led(rgb_new, rgb_current, time):
+def fade_led(rgb_new, rgb_current, waiting_time):
     r_step = rgb_new[0] - rgb_current[0]
     g_step = rgb_new[1] - rgb_current[1]
     b_step = rgb_new[2] - rgb_current[2]
 
     rgb_step = [math.fabs(r_step), math.fabs(g_step), math.fabs(b_step)]
-    #TODO min_step darf nicht 0 werden
-    min_step = min(rgb_step)
+
+    while True:
+        try:
+            rgb_step.remove(0)
+        except ValueError:
+            try:
+                min_step = min(rgb_step)
+                break
+            except ValueError:
+                min_step = 1
+                break
 
     # time_step in seconds
-    time_step = time / min_step
+    time_step = waiting_time / min_step
+
+    if time_step < 1/50:
+        time_step = 1/50
+        min_step = 50
 
     r_step_size = r_step / min_step
     g_step_size = g_step / min_step
     b_step_size = b_step / min_step
 
-    print(min_step, time_step, r_step_size, b_step_size, g_step_size)
+    # Multiplikation mit Tausend, da es bei den floats sonst zu Rundungsfehlern kommt
+    multiplied_time_step = time_step * 1000
+    multiplied_waiting_time = 1000 * waiting_time
 
-    t = time_step
+    print(min_step, time_step, r_step_size, b_step_size, g_step_size, multiplied_waiting_time, multiplied_time_step)
+
+    t = multiplied_time_step
     r_val = rgb_current[0]
     g_val = rgb_current[1]
     b_val = rgb_current[2]
 
-    while t < time:
-        r_val = int(round(r_val + r_step_size, 0))
-        g_val = int(round(g_val + g_step_size, 0))
-        b_val = int(round(b_val + b_step_size, 0))
-        print(t, r_val, g_val, b_val)
-        t = t + time_step
+    while t <= multiplied_waiting_time:
+        r_val = r_val + r_step_size
+        g_val = g_val + g_step_size
+        b_val = b_val + b_step_size
+        # Gerundet wird in matrix.draw_pixels(). Hier nur zum Debuggen.
+        r_val_led = int(round(r_val, 0))
+        g_val_led = int(round(b_val, 0))
+        b_val_led = int(round(g_val, 0))
+        print(t/1000, r_val_led, g_val_led, b_val_led)
+        t += multiplied_time_step
+        time.sleep(time_step)
 
 
 new = [0, 0, 0]
-current = [10, 10, 10]
-fade_led(new, current, 1)
-
-
+current = [255, 0, 0]
+fade_led(new, current, .01)
