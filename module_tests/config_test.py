@@ -1,17 +1,28 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Valentin'
 
-import json
+from piwordclock import config_parser as jp
 
 if __name__ == '__main__':
     json_file_path = "../config.json"
-    with open(json_file_path) as json_raw_data:
-        config_data = json.load(json_raw_data)
-        print("WordClock Version: " + config_data["WordClock Version"])
-        print("Binary Mode: " + str(config_data["Binary Mode"]))
-        start_up_colors_on = config_data["Start Up On Color"]
-        print("Start Up Color On Values: " + "R: " + str(start_up_colors_on["red"]) + " G: " +
-              str(start_up_colors_on["green"]) + " B: " + str(start_up_colors_on["blue"]))
-        start_up_colors_off = config_data["Start Up Off Color"]
-        print("Start Up Color Off Values: " + "R: " + str(start_up_colors_off["red"]) + " G: " +
-              str(start_up_colors_off["green"]) + " B: " + str(start_up_colors_off["blue"]))
+    config_data = jp.read_config_file(json_file_path)
+    print("Test print function: ")
+    jp.print_configuration(config_data)
+
+    word_clock_version = str(jp.get_wordclock_version(config_data))
+    binary_extension = str(jp.get_wordclock_binary_extension(config_data))
+    start_up_on_colors = jp.get_wordclock_start_up_on_color(config_data)
+    r_on = str(start_up_on_colors["red"])
+    g_on = str(start_up_on_colors["green"])
+    b_on = str(start_up_on_colors["blue"])
+    start_up_off_colors = jp.get_wordclock_start_up_off_color(config_data)
+    r_off = str(start_up_on_colors["red"])
+    g_off = str(start_up_on_colors["green"])
+    b_off = str(start_up_on_colors["blue"])
+
+    print("\nTest seperate functions: ")
+    print("WordClock Version: " + word_clock_version)
+    print("Binary Extension installed: " + binary_extension)
+    print("RGB ON: " + r_on + ", " + g_on + ", " + b_on)
+    print("RGB OFF: " + r_off + ", " + g_off + ", " + b_off)
+
