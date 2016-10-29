@@ -18,7 +18,7 @@ def get_wordclock_version(json_data_dict):
     return json_data_dict["WordClock Version"]
 
 
-def get_wordclock_binary_extension(json_data_dict):
+def get_wordclock_binary_extension_leds(json_data_dict):
     """Returns if the WordClock has the binary extension set."""
     return json_data_dict["Binary Extension LEDs"]
 

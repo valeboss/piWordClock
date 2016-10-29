@@ -10,7 +10,7 @@ if __name__ == '__main__':
     jp.print_configuration(config_data)
 
     word_clock_version = str(jp.get_wordclock_version(config_data))
-    binary_extension_leds = str(jp.get_wordclock_binary_extension(config_data))
+    binary_extension_leds = str(jp.get_wordclock_binary_extension_leds(config_data))
     round_mode = str(jp.get_wordclock_round_mode(config_data))
     start_up_on_colors = jp.get_wordclock_start_up_on_color(config_data)
     r_on = str(start_up_on_colors["red"])
