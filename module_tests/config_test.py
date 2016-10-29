@@ -10,7 +10,8 @@ if __name__ == '__main__':
     jp.print_configuration(config_data)
 
     word_clock_version = str(jp.get_wordclock_version(config_data))
-    binary_extension = str(jp.get_wordclock_binary_extension(config_data))
+    binary_extension_leds = str(jp.get_wordclock_binary_extension(config_data))
+    round_mode = str(jp.get_wordclock_round_mode(config_data))
     start_up_on_colors = jp.get_wordclock_start_up_on_color(config_data)
     r_on = str(start_up_on_colors["red"])
     g_on = str(start_up_on_colors["green"])
@@ -22,7 +23,8 @@ if __name__ == '__main__':
 
     print("\nTest seperate functions: ")
     print("WordClock Version: " + word_clock_version)
-    print("Binary Extension installed: " + binary_extension)
+    print("Binary Extension LEDs installed: " + binary_extension_leds)
+    print("Round Mode: " + round_mode)
     print("RGB ON: " + r_on + ", " + g_on + ", " + b_on)
     print("RGB OFF: " + r_off + ", " + g_off + ", " + b_off)
 
