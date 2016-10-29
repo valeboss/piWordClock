@@ -107,7 +107,7 @@ class LuminosityControlThread(threading.Thread):
         print("Thread started: " + self.name + ". Checking light intensity every 0.5 secs.")
         while True:
             global luminosity
-            luminosity_level = sensors.read_adc(3) / 3.28
+            luminosity_level = sensors.read_adc(2) / 3.28 # its adc_channel 3 for the wordclock v2
             if luminosity_level < 0.004:  # ca.  1/255
                 luminosity = 0.004
             elif luminosity_level > 1.0:

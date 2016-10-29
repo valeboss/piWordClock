@@ -36,6 +36,7 @@ def read_adc(adcChannel):
     MOSI = 10
     MISO = 9
     CS = 8
+    ADC_TYPE = {'MCP3204': 12, 'MCP3008': 10}
     GPIO.setup(SCLK, GPIO.OUT)
     GPIO.setup(MOSI, GPIO.OUT)
     GPIO.setup(MISO, GPIO.IN)
@@ -58,7 +59,7 @@ def read_adc(adcChannel):
 
     # Empfangen der Daten vom MCP3204
     adcvalue = 0 # gelesenen Wert zurueccksetzen
-    for i in range(13):
+    for i in range(ADC_TYPE['MCP3008'] + 1):
         GPIO.output(SCLK, HIGH)
         GPIO.output(SCLK, LOW)
         adcvalue <<= 1 # 1 Position nach links schieben
@@ -68,6 +69,7 @@ def read_adc(adcChannel):
     # mit Multimeter ausgemessene Referenzspannung am ADC anliegend, idealerweise eine Referenzspannungsquelle [V]
     u_ref = 3.28
     # 12 Bit = 4096 steps
-    u_step = u_ref / 4096
+    bits = 2**ADC_TYPE['MCP3008']
+    u_step = u_ref / bits
     u_measured = adcvalue * u_step
     return u_measured
