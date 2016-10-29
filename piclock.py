@@ -3,6 +3,7 @@ __author__ = 'Valentin'
 
 from piwordclock import wordclock as wc
 from piwordclock import sensors
+from piwordclock import config_parser as cp
 import threading
 import time
 import tornado.httpserver
@@ -16,7 +17,7 @@ from tornado.options import define, options
 import sqlite3
 import datetime
 
-pixel_colour_on = [3, 255, 204]
+pixel_colour_on = [65, 255, 0]
 pixel_colour_off = [0, 0, 0]
 pixel_list = []
 clock_mode = "words"
@@ -32,7 +33,10 @@ class ClockThread(threading.Thread):
 
     def run(self):
         global colour_lock
-        clock = wc.WordClock(15, 15)
+        json_data = cp.read_config_file("config.json")
+        binary_extension_leds = cp.get_wordclock_binary_extension_leds(json_data)
+        round_mode = cp.get_wordclock_round_mode(json_data)
+        clock = wc.WordClock(15, 15, binary_extension_leds, round_mode)
         print("Thread started: " + self.name)
         while True:
             colour_lock.acquire()
@@ -212,10 +216,10 @@ class Application(tornado.web.Application):
 if __name__ == "__main__":
     clock_thread = ClockThread(0, "WordClock")
     tornado_thread = TornadoThread(1, "Tornado Websocket Server")
-    database_thread = DatabaseThread(2, "sqlite3 Database")
+    #database_thread = DatabaseThread(2, "sqlite3 Database")
     luminosity_control_thread = LuminosityControlThread(3, "Luminosity Control")
     clock_thread.start()
     tornado_thread.start()
-    database_thread.start()
+    #database_thread.start()
     luminosity_control_thread.start()
     main()
