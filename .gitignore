@@ -1,3 +1,4 @@
 piwordclock/__pycache__
 piwordclock/*.pyc
 *.pyc
+.idea
