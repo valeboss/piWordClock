@@ -17,14 +17,16 @@ class Matrix(object):
     # @param pixel Anzahl der Pixel in Reihe
     # @param strip Muss ein Objekt aus der Klasse Neopixel sein. Auf diesem werden die Funktionen zur Anzeige der
     # Uhrzeit ausgeführt.
-    def __init__(self, pixel, strip):
+    def __init__(self, pixel, binary_extension, strip):
         i = 0
         self.strip = strip
         self.pixels = []
         self.colonVisible = False
         self.pixel_colour_on = [0, 0, 150]
         self.pixel_colour_off = [0, 0, 0]
-        while i <= pixel-1:
+        self.__binary_extension = binary_extension
+        # For each pixel create one pixel object and append it to the  pixels array
+        while i <= (pixel+self.__binary_extension)-1:
             self.pixels.append(Pixel(False, i % 15, int(i/15), "yellow", "white"))
             i += 1
 
@@ -61,7 +63,7 @@ class Matrix(object):
     # Farbe der einzelnen Pixel wird hier noch nicht berücksichtigt sondern nur eine Allgemeine global gesetzte. Dies
     # muss noch implementiert werden.
     def draw_pixels(self):
-        for i in range(0, len(self.pixels) - 3):
+        for i in range(0, len(self.pixels) - self.__binary_extension):
             row = int((i - i % 15)/15)
             if row % 2 == 0:
                 i_neu = i
@@ -74,7 +76,8 @@ class Matrix(object):
                 self.strip.setPixelColorRGB(i_neu, int(self.pixel_colour_off[0]), int(self.pixel_colour_off[1]),
                                             int(self.pixel_colour_off[2]))
 
-        for i in range(len(self.pixels) - 3, len(self.pixels)):
+        # This shows the binary extension leds
+        for i in range(len(self.pixels) - self.__binary_extension, len(self.pixels)):
             if self.pixels[i].state:
                 self.strip.setPixelColorRGB(i, int(self.pixel_colour_on[0]), int(self.pixel_colour_on[1]),
                                             int(self.pixel_colour_on[2]))

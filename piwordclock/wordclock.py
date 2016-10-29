@@ -25,7 +25,7 @@ class WordClock(object):
     # @param self Object pointer
     # @param count_x Anzahl der Pixel in horizontaler Richtung (x-Achse).
     # @param count_y Anzahl der Pixel in vertikaler Richtung (y-Achse).
-    def __init__(self, count_x, count_y):
+    def __init__(self, count_x, count_y, binary_extension_leds=0, round_mode=True):
         """Initializes the class WordClock."""
         # Wird alles nur gemacht, wenn sich das Programm auf dem RaspberryPi befindet.
         try:
@@ -39,11 +39,13 @@ class WordClock(object):
             self.device_file = self.device_folder + '/w1_slave'
         except NameError:
             pass
-        # Initializes the Adafruit_NeoPixel library.
+        self.__binary_extension_leds = binary_extension_leds
+        self.__round_mode = round_mode
+        # Initialises the Adafruit_NeoPixel library.
         self.strip = Adafruit_NeoPixel((count_x * count_y) + 3, 18, 800000, 5, False)
         self.strip.begin()
-        # Initilaizes the matrix for the WordClock
-        self.matrix = Matrix((count_x * count_y) + 3, self.strip)
+        # Initialises the matrix for the WordClock
+        self.matrix = Matrix((count_x * count_y), self.__binary_extension_leds, self.strip)
 
     ## Diese Funktion startet die WordClock.
     #
@@ -74,13 +76,18 @@ class WordClock(object):
         minutes = datetime[4]
         seconds = datetime[5]
 
-        #minute_step = int((minutes+int(seconds/60))+2.5-((minutes+int(seconds/60))+2.5) % 5)
-        if minutes % 10 >= 5:
-            minute_step = minutes - (minutes % 10) + 5
-        else:
-            minute_step = minutes - (minutes % 10)
+        # Just definitions
+        minute_step = None
+        minutes_binary = None
 
-        minutes_binary = int(math.fabs(minutes - minute_step))
+        if self.__round_mode == True:
+            minute_step = int((minutes+int(seconds/60))+2.5-((minutes+int(seconds/60))+2.5) % 5)
+        else:
+            if minutes % 10 >= 5:
+                minute_step = minutes - (minutes % 10) + 5
+            else:
+                minute_step = minutes - (minutes % 10)
+            minutes_binary = int(math.fabs(minutes - minute_step))
 
         hour_step = hours
         if minute_step >= 25:
@@ -100,17 +107,11 @@ class WordClock(object):
             visible_pixels.extend([204, 205, 206])
 
         # Binär kodierte Minutenanzeige auf den drei letzten LEDs; invertierte LEDs, da gerade Reihe
-        binary_pixels = [[], [227], [226], [226, 227], [225]]
-        visible_pixels.extend(binary_pixels[minutes_binary])
-
-        #if minutes_binary == 1:
-        #    visible_pixels.extend([227])
-        #elif minutes_binary == 2:
-        #    visible_pixels.extend([226])
-        #elif minutes_binary == 3:
-        #    visible_pixels.extend([226, 227])
-        #elif minutes_binary == 4:
-        #    visible_pixels.extend([225])
+        if self.__binary_extension_leds == 3 and self.__round_mode is False:
+            binary_pixels = [[], [227], [226], [226, 227], [225]]
+            visible_pixels.extend(binary_pixels[minutes_binary])
+        else:
+            pass
 
         if minute_step == 5 or minute_step == 25 or minute_step == 35 or minute_step == 55:
             visible_pixels.extend([53, 54, 55, 56])
