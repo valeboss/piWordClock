@@ -1,8 +1,14 @@
 {
-	"WordClock Version": "1",
-	"Start Up Color": {
-		"red": 255,
-		"green": 65,
-		"blue": 0
-	}
+  "WordClock Version": "1",
+  "Binary Mode": false,
+  "Start Up On Color": {
+    "red": 255,
+    "green": 65,
+    "blue": 0
+  },
+  "Start Up Off Color": {
+    "red": 255,
+    "green": 65,
+    "blue": 0
+  }
 }	
