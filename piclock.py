@@ -17,14 +17,22 @@ from tornado.options import define, options
 import sqlite3
 import datetime
 
-pixel_colour_on = [65, 255, 0]
-pixel_colour_off = [0, 0, 0]
 pixel_list = []
 clock_mode = "words"
 luminosity = 1.0
-colour_lock = threading.Lock()
+# TODO: Put all that stuff into one class/object
+config_data = cp.read_config_file("config.json")
+rgb_on = cp.get_wordclock_start_up_on_color(config_data)
+pixel_color_on = [rgb_on['green'], rgb_on['red'], rgb_on['blue']]
+rgb_off = cp.get_wordclock_start_up_off_color(config_data)
+pixel_color_off = [rgb_off['green'], rgb_off['red'], rgb_off['blue']]
+binary_extension_leds = cp.get_wordclock_binary_extension_leds(config_data)
+round_mode = cp.get_wordclock_round_mode(config_data)
+cp.print_configuration(config_data)
 
+color_lock = threading.Lock()
 
+# TODO: Put all Thread classes in single files
 class ClockThread(threading.Thread):
     def __init__(self, thread_id, name):
         threading.Thread.__init__(self)
@@ -32,20 +40,17 @@ class ClockThread(threading.Thread):
         self.name = name
 
     def run(self):
-        global colour_lock
-        json_data = cp.read_config_file("config.json")
-        binary_extension_leds = cp.get_wordclock_binary_extension_leds(json_data)
-        round_mode = cp.get_wordclock_round_mode(json_data)
+        global color_lock
         clock = wc.WordClock(15, 15, binary_extension_leds, round_mode)
         print("Thread started: " + self.name)
         while True:
-            colour_lock.acquire()
+            color_lock.acquire()
             try:
-                clock.set_wordclock_colour_on([colour * luminosity for colour in pixel_colour_on])
-                clock.set_wordclock_colour_off([colour * luminosity for colour in pixel_colour_off])
+                clock.set_wordclock_colour_on([color * luminosity for color in pixel_color_on])
+                clock.set_wordclock_colour_off([color * luminosity for color in pixel_color_off])
                 clock.run_clock(clock_mode, pixel_list)
             finally:
-                colour_lock.release()
+                color_lock.release()
             # sleep könnte evtl. in die Funktionen, dann ist es aber schwieriger den Thread zu kontrollieren
             time.sleep(1)
 
@@ -150,7 +155,7 @@ class WebsocketHandler(tornado.websocket.WebSocketHandler):
 
     def message_handler(self, message):
         global pixel_list
-        global colour_lock
+        global color_lock
         pixel_list = None
         if message == "get_status":
             print("Got asked for status. Sending status...")
@@ -167,21 +172,21 @@ class WebsocketHandler(tornado.websocket.WebSocketHandler):
             instruction = str(message_array[0])
             print("Received instruction: " + instruction + " in following JSON-String: " + str(message_array))
             if instruction == "on_colour_rgb":
-                colour_lock.acquire()
+                color_lock.acquire()
                 try:
-                    global pixel_colour_on
-                    pixel_colour_on = ([int(message_array[1] * factor), int(message_array[2] * factor),
-                                        int(message_array[3] * factor)])
+                    global pixel_color_on
+                    pixel_color_on = ([int(message_array[1] * factor), int(message_array[2] * factor),
+                                       int(message_array[3] * factor)])
                 finally:
-                    colour_lock.release()
+                    color_lock.release()
             elif instruction == "off_colour_rgb":
-                colour_lock.acquire()
+                color_lock.acquire()
                 try:
-                    global pixel_colour_off
-                    pixel_colour_off = ([int(message_array[1] * factor), int(message_array[2] * factor),
+                    global pixel_color_off
+                    pixel_color_off = ([int(message_array[1] * factor), int(message_array[2] * factor),
                                         int(message_array[3] * factor)])
                 finally:
-                    colour_lock.release()
+                    color_lock.release()
             elif instruction == "set_mode":
                 global clock_mode
                 clock_mode = message_array[1]
