@@ -2,6 +2,7 @@
   "WordClock Version": "1",
   "Binary Extension LEDs": 0,
   "Round Mode": true,
+  "Start Up Mode": "words",
   "Start Up On Color": {
     "red": 255,
     "green": 65,

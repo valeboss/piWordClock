@@ -18,7 +18,6 @@ import sqlite3
 import datetime
 
 pixel_list = []
-clock_mode = "words"
 luminosity = 1.0
 # TODO: Put all that stuff into one class/object
 config_data = cp.read_config_file("config.json")
@@ -26,6 +25,7 @@ rgb_on = cp.get_wordclock_start_up_on_color(config_data)
 pixel_color_on = [rgb_on['green'], rgb_on['red'], rgb_on['blue']]
 rgb_off = cp.get_wordclock_start_up_off_color(config_data)
 pixel_color_off = [rgb_off['green'], rgb_off['red'], rgb_off['blue']]
+clock_mode = cp.get_wordclock_start_up_mode(config_data) 
 binary_extension_leds = cp.get_wordclock_binary_extension_leds(config_data)
 round_mode = cp.get_wordclock_round_mode(config_data)
 cp.print_configuration(config_data)
