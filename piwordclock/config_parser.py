@@ -47,6 +47,8 @@ def get_wordclock_config_data(json_data_dict, data):
 
 def print_configuration(config_data):
     """Prints the current start up configuration of the WordClock."""
+    print("--------------------------------------------------")
+    print("The current configuration is set as follows:")
     print("WordClock Version: " + str(config_data["WordClock Version"]))
     print("Binary Extension LEDs: " + str(config_data["Binary Extension LEDs"]))
     print("Round Mode: " + str(config_data["Round Mode"]))
@@ -57,4 +59,5 @@ def print_configuration(config_data):
     start_up_colors_off = config_data["Start Up Off Color"]
     print("Start Up Color Off Values: " + "R: " + str(start_up_colors_off["red"]) + " G: " +
           str(start_up_colors_off["green"]) + " B: " + str(start_up_colors_off["blue"]))
+    print("--------------------------------------------------")
 

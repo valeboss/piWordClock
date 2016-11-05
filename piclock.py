@@ -22,6 +22,7 @@ luminosity = 1.0
 # TODO: Put all that stuff into one class/object
 config_data = cp.read_config_file("config.json")
 rgb_on = cp.get_wordclock_start_up_on_color(config_data)
+# TODO: Check why its GRB. It should be RGB.
 pixel_color_on = [rgb_on['green'], rgb_on['red'], rgb_on['blue']]
 rgb_off = cp.get_wordclock_start_up_off_color(config_data)
 pixel_color_off = [rgb_off['green'], rgb_off['red'], rgb_off['blue']]
