@@ -9,6 +9,7 @@ except ImportError:
     pass
 from .matrix import Matrix
 from .number import Number
+from .debug_date import DebugTime
 #from .letterstring import Letterstring
 try:
     from neopixel import *
@@ -46,6 +47,7 @@ class WordClock(object):
         self.strip.begin()
         # Initialises the matrix for the WordClock
         self.matrix = Matrix((count_x * count_y), self.__binary_extension_leds, self.strip)
+        self.__debug_datetime = DebugTime()
 
     ## Diese Funktion startet die WordClock.
     #
@@ -53,25 +55,36 @@ class WordClock(object):
     # @param mode String der den Zeitmodus beschreibt. "words" für Wortmodus und "digital" für digitalen Modus.
     def run_clock(self, mode, optional_argument=None):
         token_dict = {"words": self.display_time_in_words,
+                      "words_debug": self.display_time_in_words,
                       "digital": self.display_digital_time_mode,
                       "temp": self.display_temperature,
                       "render_pixel_list": self.display_custom_pixel_list}
         self.matrix.clear_all_pixels()
         function_to_call = token_dict[mode]
         if not optional_argument:
-            function_to_call(self.matrix)
+            if not mode == "words_debug":
+                function_to_call(self.matrix)
+            elif mode == "words_debug":
+                function_to_call(self.matrix, debugging=True)
         elif mode == "render_pixel_list":
             function_to_call(self.matrix, optional_argument)
         else:
-            print("No match. Use words, digital, temp or pixel_list. See documentation for reference.")
+            print("No match. Use words, digital, temp or render_pixel_list. See documentation for reference.")
             pass
 
     ## Diese Funktion stellt die aktuelle Zeit in Worten dar.
     #
     # @param self Object pointer
     # @param matrix Objekt der Klasse Matrix, welches die Matrix enthält, die die Zeit in Wörtern anzeigen soll.
-    def display_time_in_words(self, matrix):
-        datetime = time.localtime()
+    def display_time_in_words(self, matrix, debugging=False):
+
+        if not debugging:
+            datetime = time.localtime()
+        else:
+            datetime = self.__debug_datetime.get_datetime()
+            self.__debug_datetime.print_datetime()
+            self.__debug_datetime.user_defined_tick(305)
+
         hours = datetime[3]
         minutes = datetime[4]
         seconds = datetime[5]
@@ -80,13 +93,22 @@ class WordClock(object):
         minute_step = None
         minutes_binary = None
 
+        # Displays "ES IST"
+        visible_pixels = [18, 19, 22, 23, 24]
+
         if self.__round_mode == True:
             minute_step = int((minutes+int(seconds/60))+2.5-((minutes+int(seconds/60))+2.5) % 5)
+            # Displays "UHR"
+            if minute_step == 0:
+                visible_pixels.extend([204, 205, 206])
         else:
             if minutes % 10 >= 5:
                 minute_step = minutes - (minutes % 10) + 5
             else:
                 minute_step = minutes - (minutes % 10)
+            # Displays "UHR"
+            if minute_step == 0:
+                visible_pixels.extend([204, 205, 206])
             minutes_binary = int(math.fabs(minutes - minute_step))
 
         hour_step = hours
@@ -99,14 +121,7 @@ class WordClock(object):
         else:
             pm = False
 
-        # Displays "ES IST"
-        visible_pixels = [18, 19, 22, 23, 24]
-
-        # Displays "UHR"
-        if minute_step == 0:
-            visible_pixels.extend([204, 205, 206])
-
-        # Binär kodierte Minutenanzeige auf den drei letzten LEDs; invertierte LEDs, da gerade Reihe
+        # Binär kodierte Minutenanzeige auf den drei letzten LEDs; invertierte LEDs, da gerade Reihe (LED Reihe)
         if self.__binary_extension_leds == 3 and self.__round_mode is False:
             binary_pixels = [[], [227], [226], [226, 227], [225]]
             visible_pixels.extend(binary_pixels[minutes_binary])
