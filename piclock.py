@@ -30,6 +30,7 @@ clock_mode = cp.get_wordclock_start_up_mode(config_data)
 binary_extension_leds = cp.get_wordclock_binary_extension_leds(config_data)
 round_mode = cp.get_wordclock_round_mode(config_data)
 wordclock_version = cp.get_wordclock_version(config_data)
+refresh_rate = cp.get_wordclock_refresh_rate(config_data)
 cp.print_configuration(config_data)
 
 color_lock = threading.Lock()
@@ -54,7 +55,7 @@ class ClockThread(threading.Thread):
             finally:
                 color_lock.release()
             # sleep könnte evtl. in die Funktionen, dann ist es aber schwieriger den Thread zu kontrollieren
-            time.sleep(1)
+            time.sleep(refresh_rate)
 
 
 class TornadoThread(threading.Thread):

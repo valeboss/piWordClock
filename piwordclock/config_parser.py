@@ -37,13 +37,21 @@ def get_wordclock_round_mode(json_data_dict):
     """Returns if the round mode is enabled or not."""
     return json_data_dict["Round Mode"]
 
+
 def get_wordclock_start_up_mode(json_data_dict):
     """Returns the Start Up Mode of the WordClock."""
     return json_data_dict["Start Up Mode"]
 
+
+def get_wordclock_refresh_rate(json_data_dict):
+    """Returns the refresh rate of the WordClock loop."""
+    return json_data_dict["Refresh rate [sec]"]
+
+
 def get_wordclock_config_data(json_data_dict, data):
     """Returns the given data from a .json data  dictionary."""
     return json_data_dict[data]
+
 
 def print_configuration(config_data):
     """Prints the current start up configuration of the WordClock."""
@@ -52,7 +60,8 @@ def print_configuration(config_data):
     print("WordClock Version: " + str(config_data["WordClock Version"]))
     print("Binary Extension LEDs: " + str(config_data["Binary Extension LEDs"]))
     print("Round Mode: " + str(config_data["Round Mode"]))
-    print("WordClock Start Up Mode: "  + str(config_data["Start Up Mode"]))
+    print("WordClock Start Up Mode: " + str(config_data["Start Up Mode"]))
+    print("Refresh rate [sec]: " + str(config_data["Refresh rate [sec]"]))
     start_up_colors_on = config_data["Start Up On Color"]
     print("Start Up Color On Values: " + "R: " + str(start_up_colors_on["red"]) + " G: " +
           str(start_up_colors_on["green"]) + " B: " + str(start_up_colors_on["blue"]))
