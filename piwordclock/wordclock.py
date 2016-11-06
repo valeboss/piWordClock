@@ -93,23 +93,21 @@ class WordClock(object):
         minute_step = None
         minutes_binary = None
 
-        # Displays "ES IST"
-        visible_pixels = [18, 19, 22, 23, 24]
-
         if self.__round_mode == True:
             minute_step = int((minutes+int(seconds/60))+2.5-((minutes+int(seconds/60))+2.5) % 5)
-            # Displays "UHR"
-            if minute_step == 0:
-                visible_pixels.extend([204, 205, 206])
         else:
             if minutes % 10 >= 5:
                 minute_step = minutes - (minutes % 10) + 5
             else:
                 minute_step = minutes - (minutes % 10)
-            # Displays "UHR"
-            if minute_step == 0:
-                visible_pixels.extend([204, 205, 206])
             minutes_binary = int(math.fabs(minutes - minute_step))
+
+        # Displays "ES IST"
+        visible_pixels = [18, 19, 22, 23, 24]
+
+        # Displays "UHR"
+        if minute_step == 0 or minute_step == 60:
+            visible_pixels.extend([204, 205, 206])
 
         hour_step = hours
         if minute_step >= 25:
