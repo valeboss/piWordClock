@@ -29,6 +29,7 @@ pixel_color_off = [rgb_off['green'], rgb_off['red'], rgb_off['blue']]
 clock_mode = cp.get_wordclock_start_up_mode(config_data) 
 binary_extension_leds = cp.get_wordclock_binary_extension_leds(config_data)
 round_mode = cp.get_wordclock_round_mode(config_data)
+wordclock_version = cp.get_wordclock_version(config_data)
 cp.print_configuration(config_data)
 
 color_lock = threading.Lock()
@@ -108,12 +109,19 @@ class LuminosityControlThread(threading.Thread):
         threading.Thread.__init__(self)
         self.thread_id = thread_id
         self.name = name
+        if wordclock_version == "1":
+            self.__light_sensor_adc_channel = 2
+        elif wordclock_version == "2":
+            self.__light_sensor_adc_channel = 3
+        else:
+            print("Couldn't detect wordclock version. Setting light sensor ADC channel to 3.")
+            self.__light_sensor_adc_channel = 3
 
     def run(self):
         print("Thread started: " + self.name + ". Checking light intensity every 0.5 secs.")
         while True:
             global luminosity
-            luminosity_level = sensors.read_adc(2) / 3.28 # its adc_channel 3 for the wordclock v2
+            luminosity_level = sensors.read_adc(self.__light_sensor_adc_channel) / 3.28
             if luminosity_level < 0.004:  # ca.  1/255
                 luminosity = 0.004
             elif luminosity_level > 1.0:
