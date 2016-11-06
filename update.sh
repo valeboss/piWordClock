@@ -1,4 +1,4 @@
 #!/bin/bash
 
-git fetch
-git pull
+git -C ~/piWordClock/.git fetch
+git -C ~/piWordClock/.git pull
