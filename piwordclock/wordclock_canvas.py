@@ -73,7 +73,7 @@ class Adafruit_NeoPixel(object):
             x = abs(col - 14)
         else:
             x = col
-        factor = 10
+        factor = 1
         rgb = (r * factor, g * factor, b * factor)
         #self.w.create_rectangle(x * x_pixelsize + self.offset, y * y_pixelsize + self.offset,
         #                        x * x_pixelsize + self.x_pixelsize - self.offset,
