@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#TODO: add virtualenv and use pip
 sudo apt-get update && sudo apt-get upgrade
 sudo apt-get install git scons swig build-essential python3 python3-dev
 mkdir -r Programme

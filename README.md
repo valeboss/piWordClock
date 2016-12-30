@@ -18,3 +18,5 @@ sudo sh install.sh
 ## Configuration instructions
 You can edit the configuration file to set up the clock according to your
 wishes.
+
+## Update the piWordClock
