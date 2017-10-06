@@ -130,7 +130,7 @@ class LuminosityControlThread(threading.Thread):
                 luminosity = 1.0
             else:
                 luminosity = luminosity_level
-		datetime = time.localtime()
+                datetime = time.localtime()
                 minutes = datetime[4]
                 seconds = datetime[5]
                 if (minutes % 5) == 4:
