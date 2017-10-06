@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import glob
-import RPi.GPIO as GPIO
+try:
+    import RPi.GPIO as GPIO
+except ImportError:
+    pass
 import time
-
 
 def read_temp():
     base_dir = '/sys/bus/w1/devices/'
