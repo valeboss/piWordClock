@@ -47,6 +47,9 @@ def get_wordclock_refresh_rate(json_data_dict):
     """Returns the refresh rate of the WordClock loop."""
     return json_data_dict["Refresh rate [sec]"]
 
+def get_wordclock_fading_mode(json_data_dict):
+    """Returns the fading mode of the WordClock."""
+    return json_data_dict["Fading Mode"]
 
 def get_wordclock_config_data(json_data_dict, data):
     """Returns the given data from a .json data  dictionary."""
@@ -62,6 +65,7 @@ def print_configuration(config_data):
     print("Round Mode: " + str(config_data["Round Mode"]))
     print("WordClock Start Up Mode: " + str(config_data["Start Up Mode"]))
     print("Refresh rate [sec]: " + str(config_data["Refresh rate [sec]"]))
+    print("Fading Mode:" + str(config_data["Fading Mode"]))
     start_up_colors_on = config_data["Start Up On Color"]
     print("Start Up Color On Values: " + "R: " + str(start_up_colors_on["red"]) + " G: " +
           str(start_up_colors_on["green"]) + " B: " + str(start_up_colors_on["blue"]))

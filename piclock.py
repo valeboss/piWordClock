@@ -31,6 +31,7 @@ binary_extension_leds = cp.get_wordclock_binary_extension_leds(config_data)
 round_mode = cp.get_wordclock_round_mode(config_data)
 wordclock_version = cp.get_wordclock_version(config_data)
 refresh_rate = cp.get_wordclock_refresh_rate(config_data)
+fading_mode = cp.get_wordclock_fading_mode(config_data)
 cp.print_configuration(config_data)
 
 color_lock = threading.Lock()
@@ -129,18 +130,20 @@ class LuminosityControlThread(threading.Thread):
                 print("Debug information: luminosity level > 1 luminosity_level: " + str(luminosity_level))
                 luminosity = 1.0
             else:
-                luminosity = luminosity_level
-                datetime = time.localtime()
-                minutes = datetime[4]
-                seconds = datetime[5]
-                if (minutes % 5) == 4:
-                    if seconds >= 52:
-                        if offset == 0:
-                            offset = 0.05
-                        else:
-                            offset = 0
-                        factor = ((60 - seconds + 1) / 10.0) + offset
-                        luminosity = luminosity * factor
+                if not fading_mode:
+                    luminosity = luminosity_level
+                else:
+                    datetime = time.localtime()
+                    minutes = datetime[4]
+                    seconds = datetime[5]
+                    if (minutes % 5) == 4:
+                        if seconds >= 52:
+                            if offset == 0:
+                                offset = 0.05
+                            else:
+                                offset = 0
+                            factor = ((60 - seconds + 1) / 10.0) + offset
+                            luminosity = luminosity * factor
             time.sleep(0.5)
 
 
@@ -241,11 +244,11 @@ class Application(tornado.web.Application):
 
 if __name__ == "__main__":
     clock_thread = ClockThread(0, "WordClock")
-    tornado_thread = TornadoThread(1, "Tornado Websocket Server")
+    #tornado_thread = TornadoThread(1, "Tornado Websocket Server")
     #database_thread = DatabaseThread(2, "sqlite3 Database")
     luminosity_control_thread = LuminosityControlThread(3, "Luminosity Control")
     clock_thread.start()
-    tornado_thread.start()
+    #tornado_thread.start()
     #database_thread.start()
     luminosity_control_thread.start()
     main()

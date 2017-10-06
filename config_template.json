@@ -4,6 +4,7 @@
   "Round Mode": true,
   "Start Up Mode": "words",
   "Refresh rate [sec]": 1,
+  "Fading Mode": true,
   "Start Up On Color": {
     "red": 255,
     "green": 65,
