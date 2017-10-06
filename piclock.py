@@ -16,11 +16,21 @@ import json
 from tornado.options import define, options
 import sqlite3
 import datetime
+import os.path
 
 pixel_list = []
 luminosity = 1.0
 # TODO: Put all that stuff into one class/object
-config_data = cp.read_config_file("config.json")
+if os.path.isfile("config.json"):
+    print("Using configuration specified in 'config.json'.")
+    config_data = cp.read_config_file("config.json")
+else:
+    print("Found no config file, using template file. Please specify your own WordClock configuration in 'config.json'."
+          " Please use the template specified as in 'config_template.json':")
+    if os.path.isfile("config_template.json"):
+        config_data = cp.read_config_file("config_template.json")
+    else:
+        "Found no template configuration. Please add a configuration file or update the repository."
 rgb_on = cp.get_wordclock_start_up_on_color(config_data)
 # TODO: Check why its GRB. It should be RGB.
 pixel_color_on = [rgb_on['green'], rgb_on['red'], rgb_on['blue']]
