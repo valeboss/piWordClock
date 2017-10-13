@@ -20,6 +20,7 @@ import os.path
 
 pixel_list = []
 luminosity = 1.0
+offset=0.0
 # TODO: Put all that stuff into one class/object
 if os.path.isfile("config.json"):
     print("Using configuration specified in 'config.json'.")
