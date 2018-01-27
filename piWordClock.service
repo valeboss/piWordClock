@@ -3,7 +3,7 @@ Description=piWordClock service unit. Automatically starts the piWordClock scrip
 
 [Service]
 Type=simple
-ExecStart=python3 /home/pi/piWordClock/piclock.py
+ExecStart=/home/pi/piWordClock/piclock.py
 
 [Install]
 WantedBy=multi-user.target
