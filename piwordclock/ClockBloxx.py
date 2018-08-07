@@ -26,7 +26,11 @@ class ClockBloxx(object):
         strip_indexes = []
         strip_colors = []
         for element in self._bloxx_elements:
-            new_strip_indexes = (element.xy[:, 0] + element.xy[:, 1] * 15).astype(np.uint32)
+            new_strip_indexes = np.zeros(element.xy.shape[0])
+            ind_odd = np.where(element.xy[:, 1] % 2 == 1)
+            ind_even = np.where(element.xy[:, 1] % 2 == 0)
+            new_strip_indexes[ind_even] = ((element.xy[ind_even, 1] + 1) * 15 - 1 - element.xy[ind_even, 0]).astype(np.uint32)
+            new_strip_indexes[ind_odd] = (element.xy[ind_odd, 0] + element.xy[ind_odd, 1] * 15).astype(np.uint32)
             strip_indexes.extend(new_strip_indexes)
             for index in strip_indexes:
                 strip_colors.append(element.rgb)
